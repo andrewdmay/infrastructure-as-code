@@ -1,0 +1,41 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Simple VPC with subnets
+  
+Resources:
+  Vpc:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 10.0.0.0/16
+      Tags:
+        - Key: Name
+          Value: Three Subnets  
+
+  Subnet1:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone: us-east-2a
+      CidrBlock: 10.0.0.0/24
+      Tags:
+        - Key: Name
+          Value: Subnet One  
+      VpcId: !Ref Vpc
+
+  Subnet2:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone: us-east-2b
+      CidrBlock: 10.0.1.0/24
+      Tags:
+        - Key: Name
+          Value: Subnet Two  
+      VpcId: !Ref Vpc
+
+  Subnet3:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone: us-east-2c
+      CidrBlock: 10.0.2.0/24
+      Tags:
+        - Key: Name
+          Value: Subnet Three  
+      VpcId: !Ref Vpc

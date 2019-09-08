@@ -1,0 +1,75 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Simple VPC with 2 or 3 subnets
+
+Parameters:
+  SubnetCidrs:
+    Description: List of Subnet CIDR Blocks, must be at least enough for the subnet counts
+    Type: List<String>
+  SubnetCount:
+    Default: 2
+    Description: Number of Subnets to create
+    Type: Number
+    MaxValue: 3
+    MinValue: 2
+  VpcCidr:
+    AllowedPattern: (\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})/(\d{1,2})
+    ConstraintDescription: must be a valid CIDR range of the form x.x.x.x/x.
+    Description: VPC CIDR Block
+    MaxLength: '18'
+    MinLength: '9'
+    Type: String
+  VpcName:
+    AllowedPattern: '[A-Za-z0-9]+'
+    ConstraintDescription: Can only contain letters and numbers (no spaces)
+    Default: Parameterized
+    Type: String
+
+Conditions:
+  CreateThirdSubnet: !Equals [ !Ref SubnetCount, 3 ]
+
+Resources:
+  Vpc:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: !Ref VpcCidr
+      Tags:
+        - Key: Name
+          Value: !Ref VpcName
+
+  Subnet1:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone: !Select [ 0, !GetAZs '' ]
+      CidrBlock: !Select [ 0, !Ref SubnetCidrs ]
+      Tags:
+        - Key: Name
+          Value: !Sub ${VpcName} - Subnet One
+      VpcId: !Ref Vpc
+
+  Subnet2:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone: !Select [ 1, !GetAZs '' ]
+      CidrBlock: !Select [ 1, !Ref SubnetCidrs ]
+      Tags:
+        - Key: Name
+          Value: !Sub ${VpcName} - Subnet Two
+      VpcId: !Ref Vpc
+
+  Subnet3:
+    Type: AWS::EC2::Subnet
+    Condition: CreateThirdSubnet
+    Properties:
+      AvailabilityZone: !Select [ 2, !GetAZs '' ]
+      CidrBlock: !Select [ 2, !Ref SubnetCidrs ]
+      Tags:
+        - Key: Name
+          Value: !Sub ${VpcName} - Subnet Three
+      VpcId: !Ref Vpc
+
+Outputs:
+  VpcId:
+    Description: Vpc Identifier
+    Value: !Ref Vpc
+    Export:
+      Name: !Sub ${VpcName}-VpcId

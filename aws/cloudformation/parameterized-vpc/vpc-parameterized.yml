@@ -18,11 +18,6 @@ Parameters:
     MaxLength: '18'
     MinLength: '9'
     Type: String
-  VpcName:
-    AllowedPattern: '[A-Za-z0-9]+'
-    ConstraintDescription: Can only contain letters and numbers (no spaces)
-    Default: Parameterized
-    Type: String
 
 Conditions:
   CreateThirdSubnet: !Equals [ !Ref SubnetCount, 3 ]
@@ -34,7 +29,7 @@ Resources:
       CidrBlock: !Ref VpcCidr
       Tags:
         - Key: Name
-          Value: !Ref VpcName
+          Value: !Ref AWS::StackName
 
   Subnet1:
     Type: AWS::EC2::Subnet
@@ -43,7 +38,7 @@ Resources:
       CidrBlock: !Select [ 0, !Ref SubnetCidrs ]
       Tags:
         - Key: Name
-          Value: !Sub ${VpcName} - Subnet One
+          Value: !Sub ${AWS::StackName} - Subnet One
       VpcId: !Ref Vpc
 
   Subnet2:
@@ -53,7 +48,7 @@ Resources:
       CidrBlock: !Select [ 1, !Ref SubnetCidrs ]
       Tags:
         - Key: Name
-          Value: !Sub ${VpcName} - Subnet Two
+          Value: !Sub ${AWS::StackName} - Subnet Two
       VpcId: !Ref Vpc
 
   Subnet3:
@@ -64,7 +59,7 @@ Resources:
       CidrBlock: !Select [ 2, !Ref SubnetCidrs ]
       Tags:
         - Key: Name
-          Value: !Sub ${VpcName} - Subnet Three
+          Value: !Sub ${AWS::StackName} - Subnet Three
       VpcId: !Ref Vpc
 
 Outputs:
@@ -72,4 +67,4 @@ Outputs:
     Description: Vpc Identifier
     Value: !Ref Vpc
     Export:
-      Name: !Sub ${VpcName}-VpcId
+      Name: !Sub ${AWS::StackName}-VpcId

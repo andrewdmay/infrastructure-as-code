@@ -7,3 +7,11 @@
 
 # .tfvars files
 *.tfvars
+
+# Python
+*.pyc
+*__pycache__
+.env
+.idea
+*.egg-info
+cdk.out/

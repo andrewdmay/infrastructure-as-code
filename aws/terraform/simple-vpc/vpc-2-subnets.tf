@@ -8,7 +8,7 @@ resource "aws_vpc" "vpc" {
   cidr_block = "10.100.0.0/16"
 
   tags = {
-    Name = "Terrform Simple VPC"
+    Name = "Terraform Simple VPC"
   }
 }
 
@@ -18,7 +18,7 @@ resource "aws_subnet" "subnet1" {
   availability_zone = "us-east-2a"
 
   tags = {
-    Name = "Terrform Subnet1"
+    Name = "Terraform Subnet1"
   }
 }
 
@@ -28,6 +28,6 @@ resource "aws_subnet" "subnet2" {
   availability_zone = "us-east-2b"
 
   tags = {
-    Name = "Terrform Subnet2"
+    Name = "Terraform Subnet2"
   }
 }

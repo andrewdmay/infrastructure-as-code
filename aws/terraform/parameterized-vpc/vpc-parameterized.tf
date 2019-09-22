@@ -25,7 +25,7 @@ resource "aws_vpc" "vpc" {
   cidr_block = var.vpc_cidr
 
   tags = {
-    Name = "Terrform Parameterized VPC"
+    Name = "Terraform Parameterized VPC"
   }
 }
 
@@ -45,6 +45,6 @@ resource "aws_subnet" "subnet" {
   availability_zone = element(data.aws_availability_zones.available.names, count.index)
 
   tags = {
-    Name = format("Terrform Subnet %s", count.index)
+    Name = format("Terraform Subnet %s", count.index)
   }
 }

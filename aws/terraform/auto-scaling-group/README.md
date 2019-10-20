@@ -2,7 +2,7 @@
 
 This Terraform template creates an AutoScaling Group of EC2 instances running Nginx and hosting a (very) basic website.
 
-See the [CloudFormation](../../clouformation/auto-scaling-group/) version of this same infrastructure.
+See the [CloudFormation](../../cloudformation/auto-scaling-group/) version of this same infrastructure.
 
 The resources in the template are in roughly the order they need to be created due to dependencies, but Terraform will create resources in parallel where possible.
 

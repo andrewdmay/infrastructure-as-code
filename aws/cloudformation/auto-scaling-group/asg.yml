@@ -1,0 +1,169 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: AutoScaling Group and Load Balancer
+
+Parameters:
+  AmiId:
+    Description: Amazon Linux 2 AMI
+    Type: AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>
+    Default: /aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2
+  InstanceType:
+    Description: Instance Type
+    Type: String
+    Default: t2.micro
+  MaxSize:
+    Description: Maximum size of AutoScaling Group
+    Type: String
+    Default: '2'
+  MinSize:
+    Description: Minimum and initial size of AutoScaling Group
+    Type: String
+    Default: '2'
+  SubnetIds:
+    Description: Subnet Identifiers
+    Type: List<String>
+  VpcId:
+    Description: VPC Identifier
+    Type: AWS::EC2::VPC::Id
+
+Resources:
+
+################################################################################
+# IAM Resources
+################################################################################
+
+  # IAM Role used by EC2 instances in AutoScaling Group to access S3 bucket
+  InstanceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action:
+            - sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service:
+                - ec2.amazonaws.com
+      Path: /
+      ManagedPolicyArns:
+        # This allows Session Manager to be used to connect to the instances instead of using SSH
+        - arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore
+      Policies:
+        - PolicyDocument:
+            Statement:
+              - Action:
+                  - s3:GetObject
+                  - s3:ListBucket
+                Effect: Allow
+                Resource:
+                  - arn:aws:s3:::ohiolinuxfest-iac-website
+                  - arn:aws:s3:::ohiolinuxfest-iac-website/*
+          PolicyName: S3Access
+
+  # IAM Instance Profile
+  InstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Path: /
+      Roles:
+        - !Ref InstanceRole
+
+################################################################################
+# Security Groups
+################################################################################
+
+  # Load Balancer Security Group allows HTTP access from anywhere
+  LoadBalancerSg:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Load Balancer
+      SecurityGroupIngress:
+        - CidrIp: 0.0.0.0/0
+          Description: HTTP
+          FromPort: 80
+          IpProtocol: TCP
+          ToPort: 80
+      VpcId: !Ref VpcId
+
+  # AutoScaling Group Security Group allows HTTP access from Load Balancer
+  AutoScalingGroupSg:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Auto Scaling Group
+      SecurityGroupIngress:
+        - Description: From Load Balancer
+          FromPort: 80
+          IpProtocol: TCP
+          SourceSecurityGroupId: !Ref LoadBalancerSg
+          ToPort: 80
+      VpcId: !Ref VpcId
+
+################################################################################
+# Load Balancer
+################################################################################
+
+  # Internet facing Load Balancer
+  # Uses the previously created Load Balancer Securtity Group
+  # Use the SubnetIds variable
+
+  # LoadBalancer:
+  #   Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+  #   Properties:
+
+  # Default Target Group to which the EC2 instances in the ASG will be added
+  # Instance listen on port 80 (HTTP)
+  # Target group belongs to VPC (use VpcId variable)
+
+  # TargetGroup:
+  #   Type: AWS::ElasticLoadBalancingV2::TargetGroup
+  #   Properties:
+
+  # HTTP Listener that directs all traffic to the default Target Group
+  # Listen on port 80 (HTTP)
+  # Default action forward traffic to the Target Group
+
+  # HTTPListener:
+  #   Type: AWS::ElasticLoadBalancingV2::Listener
+  #   Properties:
+
+################################################################################
+# AutoScaling Group
+################################################################################
+
+  # Template for instances in the AutoScaling Group
+  # Reference the Instance Profile created previously
+  # Use AmiId and InstanceType variables
+  # Use the Auto Scaling Group Security Group
+  # Add the Name tag to the generated instances so that it's displayed in the AWS Console
+  # Use UserData to:
+  #  - install nginx,
+  #  - start/enable it (systemctl)
+  #  - Download Website using AWS CLI from s3://ohiolinuxfest-iac-website/ to /usr/share/nginx/html/
+  #  - Substitude the EC2 instance id into index.html using sed (or tool of your choice) - ec2-metadata command returns details of instance
+
+  # LaunchTemplate:
+  #   Type: AWS::EC2::LaunchTemplate
+  #   Properties:
+  #     LaunchTemplateData:
+  #       UserData:
+  #         Fn::Base64: |
+  #           #!/bin/bash
+  #           yum update -y
+  #           # install / start Nginx
+  #           # Download website
+  #           # Add instanceid to index.html
+  #     LaunchTemplateName: WebsiteInstance
+
+  # AutoScaling Group of Website EC2 instances
+  # This should reference the Launch Template using the latest version (use GetAtt)
+  # Desired Capacity / Min Size should use the MinSize variable
+  # Max Size should use the MaxSize variable
+  # Instances should be registered with the Target Group
+
+  # AutoScalingGroup:
+  #   Type: AWS::AutoScaling::AutoScalingGroup
+  #   Properties:
+  #     VPCZoneIdentifier: !Ref SubnetIds
+
+# Outputs:
+#   # Output the Domain Name of the Load Balancer
+#   LoadBalancerDomainName:

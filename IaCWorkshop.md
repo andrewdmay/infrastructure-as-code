@@ -4,7 +4,7 @@ This is a workshop being presented at conferences.
 
 ## Presentations
 
-[Introduction to AWS and Infrastructure as Code](presentations/Intro to AWS and Infrastructure as Code - Ohio LinuxFest.pdf) - Ohio LinuxFest 2019 professional training
+[Introduction to AWS and Infrastructure as Code](presentations/Intro_to_AWS_and_Infrastructure_as_Code_Ohio_LinuxFest.pdf) - Ohio LinuxFest 2019 professional training
 
 ----
 

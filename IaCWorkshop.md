@@ -2,6 +2,12 @@
 
 This is a workshop being presented at conferences.
 
+## Presentations
+
+[Introduction to AWS and Infrastructure as Code](presentations/Intro to AWS and Infrastructure as Code - Ohio LinuxFest.pdf) - Ohio LinuxFest 2019 professional training
+
+----
+
 ## Branches:
 
 There are multiple branches for the Infrastructure as Code workshop that contain templates for creating a simple Auto Scaling Group and Load Balancer in various states of completion.
@@ -30,3 +36,4 @@ AWS Accounts will be provided for the labs, but you may use your own - you might
 
 * Python cfn-lint package - `pip install -U cfn-lint`
 * Text editor plugins for CloudFormation and Terraform
+

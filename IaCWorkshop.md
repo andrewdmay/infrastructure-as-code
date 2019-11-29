@@ -18,22 +18,31 @@ There are multiple branches for the Infrastructure as Code workshop that contain
 * `iac-alb`: IAM, Security Groups and ALB/Target Group/Listener
 * `iac-solutions`: Complete template
 
+----
+
+## Pre-requisites
+
+Clone the infrastructure as code repository: https://github.com/andrewdmay/infrastructure-as-code
+
+Familiarity with the following will be helpful:
+* Using the command line
+* Cloud computing fundementals (virtual machines, load balancers, networking concepts)
+* Basic Linux knowledge - the session can be completed using Windows/MacOS/Linux, but the servers created will run Linux.
+
+AWS Accounts will be provided for the labs.
+
 ## Software:
 
-Although the created EC2 instances will be running Linux and you are expected to have some Linux experience, the lab can be completed using Windows/MacOS.
+### Required:
 
-AWS Accounts will be provided for the labs, but you may use your own - you might incur some costs depending upon whether your account is less than 12 months old (see [free tier](https://aws.amazon.com/free/free-tier/)) and exactly what resources are created.
-
-## Required:
-
-* Git
-* SSH Client
+* Git client: https://git-scm.com/downloads
 * Text Editor - ideally something that has support for the cfn-lint plugin - see [Editor Plugins](https://github.com/aws-cloudformation/cfn-python-lint#editor-plugins)
-* [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html) - I recommend installing using pip if you have Python 3 installed
-* [Terraform CLI](https://www.terraform.io/downloads.html) - sample templates have been created using Terraform 0.12
+  * Atom: https://atom.io/
+  * Visual Studio Code: https://code.visualstudio.com/Download
+* AWS CLI: https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html - I recommend installing using pip if you have Python 3 installed
+* Terraform CLI: https://www.terraform.io/downloads.html - sample templates have been created using Terraform 0.12
 
-## Optional:
+### Optional:
 
 * Python cfn-lint package - `pip install -U cfn-lint`
 * Text editor plugins for CloudFormation and Terraform
-

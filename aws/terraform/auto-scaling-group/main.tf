@@ -67,7 +67,7 @@ data "aws_ami" "amazon_linux" {
 # Use UserData to:
 #  - install nginx,
 #  - start/enable it (systemctl)
-#  - Download Website using AWS CLI from s3://ohiolinuxfest-iac-website/ to /usr/share/nginx/html/
+#  - Download Website using AWS CLI from s3://workshop-iac-website/ to /usr/share/nginx/html/
 #  - Substitude the EC2 instance id into index.html using sed (or tool of your choice) - ec2-metadata command returns details of instance
 locals {
   instance-userdata = <<EOF
@@ -105,7 +105,7 @@ EOF
 # }
 
 # Separate IAM Policy
-# Needs IAM permissions to Get objects from ohiolinuxfest-iac-website bucket and List the bucket
+# Needs IAM permissions to Get objects from workshop-iac-website bucket and List the bucket
 # resource "aws_iam_policy" "s3_access" {
 #   name_prefix = "Webserver-S3-Access-"
 #   description = "S3 Access for Instance Role"

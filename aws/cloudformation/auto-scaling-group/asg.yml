@@ -55,8 +55,8 @@ Resources:
                   - s3:ListBucket
                 Effect: Allow
                 Resource:
-                  - arn:aws:s3:::ohiolinuxfest-iac-website
-                  - arn:aws:s3:::ohiolinuxfest-iac-website/*
+                  - arn:aws:s3:::workshop-iac-website
+                  - arn:aws:s3:::workshop-iac-website/*
           PolicyName: S3Access
 
   # IAM Instance Profile
@@ -137,7 +137,7 @@ Resources:
   # Use UserData to:
   #  - install nginx,
   #  - start/enable it (systemctl)
-  #  - Download Website using AWS CLI from s3://ohiolinuxfest-iac-website/ to /usr/share/nginx/html/
+  #  - Download Website using AWS CLI from s3://workshop-iac-website/ to /usr/share/nginx/html/
   #  - Substitude the EC2 instance id into index.html using sed (or tool of your choice) - ec2-metadata command returns details of instance
 
   # LaunchTemplate:

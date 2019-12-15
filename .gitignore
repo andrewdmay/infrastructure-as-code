@@ -15,3 +15,5 @@
 .idea
 *.egg-info
 cdk.out/
+
+scripts/credentials/

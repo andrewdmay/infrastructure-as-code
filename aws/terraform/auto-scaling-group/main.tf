@@ -72,7 +72,7 @@ amazon-linux-extras install -y nginx1
 systemctl start nginx
 systemctl enable nginx
 # Download website
-aws s3 cp s3://ohiolinuxfest-iac-website/ /usr/share/nginx/html/ --recursive
+aws s3 cp s3://workshop-iac-website/ /usr/share/nginx/html/ --recursive
 # Add instanceid to index.html
 sed -i "s/@@INSTANCEID@@/$(ec2-metadata -i | cut -d' ' -f2)/" /usr/share/nginx/html/index.html
 EOF
@@ -118,8 +118,8 @@ resource "aws_iam_policy" "s3_access" {
       ],
       "Effect": "Allow",
       "Resource": [
-        "arn:aws:s3:::ohiolinuxfest-iac-website",
-        "arn:aws:s3:::ohiolinuxfest-iac-website/*"
+        "arn:aws:s3:::workshop-iac-website",
+        "arn:aws:s3:::workshop-iac-website/*"
       ]
     }
   ]

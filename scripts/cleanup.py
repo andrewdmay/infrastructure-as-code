@@ -36,10 +36,24 @@ def iam_roles(session):
     roles = client.list_roles()
     for role in roles.get('Roles', []):
         if role['Path'] == '/' and role['RoleName'] != 'OrganizationAccountAccessRole':
+            # attached Roles
             for policy in client.list_attached_role_policies(RoleName=role['RoleName']).get('AttachedPolicies', []):
                 client.detach_role_policy(RoleName=role['RoleName'], PolicyArn=policy['PolicyArn'])
+            # inline Roles
+            for policy_name in client.list_role_policies(RoleName=role['RoleName']).get('PolicyNames', []):
+                client.delete_role_policy(RoleName=role['RoleName'], PolicyName=policy_name)
             client.delete_role(RoleName=role['RoleName'])
             print(f'Deleted Role {role["RoleName"]}')
+
+    # Clean up (now detached) policies
+    policies = client.list_policies(Scope='Local')
+    for policy in policies.get('Policies', []):
+        versions = client.list_policy_versions(PolicyArn=policy['Arn'])
+        for version in versions.get('Versions', []):
+            if not version['IsDefaultVersion']:
+                client.delete_policy_version(PolicyArn=policy['Arn'], VersionId=version['VersionId'])
+        client.delete_policy(PolicyArn=policy['Arn'])
+        print(f'Deleted Policy {policy["PolicyName"]}')
 
 
 def ec2(session):
